@@ -1,0 +1,57 @@
+version: 2.1
+orbs:
+  aws-ecr: circleci/aws-ecr@6.1.0
+workflows:
+  version: 2
+  Docker_Base:
+    jobs: 
+      - aws-ecr/build-and-push-image: 
+          context: docker_base
+          account-url: AWS_ECR_ACCOUNT_URL_ENV_VAR_NAME
+          repo: ${REPONAME_BASE}
+          region: AWS_DEFAULT_REGION
+          tag: "latest"
+          filters: 
+            branches:
+              only: base
+            tags:
+              ignore: /^v[0-9]+(\.[0-9]+)*$/
+  Docker_scipy:
+    jobs:
+      - aws-ecr/build-and-push-image: 
+          context: docker_scipy
+          account-url: AWS_ECR_ACCOUNT_URL_ENV_VAR_NAME
+          repo: ${REPONAME_SCIPY}
+          region: AWS_DEFAULT_REGION
+          tag: "latest"
+          filters: 
+            branches:
+              only: scipy-notebook
+            tags:
+              ignore: /^v[0-9]+(\.[0-9]+)*$/
+  Docker_tensorflow:
+    jobs:
+      - aws-ecr/build-and-push-image: 
+          context: docker_tensorflow
+          account-url: AWS_ECR_ACCOUNT_URL_ENV_VAR_NAME
+          repo: ${REPONAME_TENSORFLOW}
+          region: AWS_DEFAULT_REGION
+          tag: "latest"
+          filters: 
+            branches:
+              only: tensorflow-notebook
+            tags:
+              ignore: /^v[0-9]+(\.[0-9]+)*$/
+  Docker_pyspark:
+    jobs:
+      - aws-ecr/build-and-push-image: 
+          context: docker_pyspark
+          account-url: AWS_ECR_ACCOUNT_URL_ENV_VAR_NAME
+          repo: ${REPONAME_PYSPARK}
+          region: AWS_DEFAULT_REGION
+          tag: "latest"
+          filters:  
+            branches:
+              only: pyspark-notebook
+            tags:
+              ignore: /^v[0-9]+(\.[0-9]+)*$/
